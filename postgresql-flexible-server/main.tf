@@ -34,6 +34,8 @@ resource "azurerm_postgresql_flexible_server" "main" {
   geo_redundant_backup_enabled = var.geo_redundant_backup_enabled
 
   public_network_access_enabled = var.public_network_access_enabled
+  delegated_subnet_id = var.delegated_subnet_id
+  private_dns_zone_id  = var.private_dns_zone_id
 
   zone = var.zone
 

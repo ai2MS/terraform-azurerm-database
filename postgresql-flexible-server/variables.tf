@@ -106,6 +106,20 @@ variable "public_network_access_enabled" {
   default     = true
 }
 
+variable "delegated_subnet_id" {
+  description = "The ID of the subnet to which the postgresql flexible server will be delegated"
+  type        = string
+  nullable    = true
+  default     = null
+}
+
+variable "private_dns_zone_id" {
+  description = "The ID of the private DNS zone to link with the postgresql flexible server"
+  type        = string
+  nullable    = true
+  default     = null
+}
+
 variable "zone" {
   description = "Specifies the availability zone in which the postgresql flexible server should be located"
   type        = string
