@@ -44,7 +44,7 @@ permissions:
 env:
   TF_CLOUD_ORGANIZATION: "Kochasoft-Test"
   TF_CLOUD_PROJECT: "Kochasoft-Portal"
-  TF_WORKSPACE: "portal-microk8s-${{ inputs.environment }}"
+  TF_WORKSPACE: "portal-k8s-${{ inputs.environment }}"
 
 jobs:
   overview:
