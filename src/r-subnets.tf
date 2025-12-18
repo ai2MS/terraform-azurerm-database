@@ -7,7 +7,8 @@ module "subnet_virtual_machines" {
 
   name = lower("${local.default_name}-SNET-VIRTUAL-MACHINES")
 
-  address_prefixes = [var.virtual_network_virtual_machines_subnet_address_space]
+  address_prefixes  = [var.virtual_network_virtual_machines_subnet_address_space]
+  service_endpoints = ["Microsoft.KeyVault"]
 
   enable_network_security_group_association = true
   network_security_group_id                 = module.network_security_group_virtual_machines.id
@@ -22,8 +23,7 @@ module "subnet_vault" {
 
   name = lower("${local.default_name}-SNET-VAULT")
 
-  address_prefixes  = [var.virtual_network_vault_subnet_address_space]
-  service_endpoints = ["Microsoft.KeyVault"]
+  address_prefixes = [var.virtual_network_vault_subnet_address_space]
 
   enable_network_security_group_association = true
   network_security_group_id                 = module.network_security_group_vault.id

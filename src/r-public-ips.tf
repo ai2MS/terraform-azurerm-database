@@ -6,7 +6,7 @@ module "public_ip_main" {
   resource_group_name = module.resource_group_main.name
   name                = "${local.default_name}-PIP-CEC-K8s"
 
-  allocation_method = "Dynamic"
+  allocation_method = "Static"
   domain_name_label = lower("${local.default_name}-CEC-K8s")
 
   tags = merge(local.default_tags, {
