@@ -15,15 +15,14 @@ module "linux_virtual_machine_main" {
 
   source_image_reference = {
     publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-noble"
-    sku       = "24_04-lts"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts"
     version   = "latest"
   }
 
   os_disk = {
     storage_account_type = "StandardSSD_LRS"
     caching              = "None"
-    disk_size_gb         = 30
   }
 
   cloud_init_config = {
