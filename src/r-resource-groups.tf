@@ -1,7 +1,7 @@
 # Resource Group for the portal
 module "resource_group_main" {
   source  = "app.terraform.io/Kochasoft-Test/resource-group/azurerm"
-  version = "1.2.4"
+  version = "1.2.5"
 
   name     = "${local.default_name}-RGrp-CEC-K8s"
   location = var.location
