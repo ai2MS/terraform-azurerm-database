@@ -1,6 +1,6 @@
 module "public_ip_main" {
   source  = "app.terraform.io/Kochasoft-Test/public-ip/azurerm"
-  version = "1.2.6"
+  version = "1.2.7"
 
   location            = module.resource_group_main.location
   resource_group_name = module.resource_group_main.name

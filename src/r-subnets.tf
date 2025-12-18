@@ -1,6 +1,6 @@
 module "subnet_virtual_machines" {
   source  = "app.terraform.io/Kochasoft-Test/subnet/azurerm"
-  version = "1.2.6"
+  version = "1.2.7"
 
   resource_group_name  = module.resource_group_main.name
   virtual_network_name = module.virtual_network_main.name
@@ -15,7 +15,7 @@ module "subnet_virtual_machines" {
 
 module "subnet_vault" {
   source  = "app.terraform.io/Kochasoft-Test/subnet/azurerm"
-  version = "1.2.6"
+  version = "1.2.7"
 
   resource_group_name  = module.resource_group_main.name
   virtual_network_name = module.virtual_network_main.name
