@@ -1,6 +1,6 @@
 module "private_endpoint_vault" {
   source  = "app.terraform.io/Kochasoft-Test/private-endpoint/azurerm"
-  version = "1.2.5"
+  version = "1.2.6"
 
   location            = module.resource_group_main.location
   resource_group_name = module.resource_group_main.name

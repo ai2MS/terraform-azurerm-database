@@ -1,6 +1,6 @@
 module "network_security_group_virtual_machines" {
   source  = "app.terraform.io/Kochasoft-Test/network-security-group/azurerm"
-  version = "1.2.5"
+  version = "1.2.6"
 
   location            = module.resource_group_main.location
   resource_group_name = module.resource_group_main.name
@@ -15,7 +15,7 @@ module "network_security_group_virtual_machines" {
 
 module "network_security_group_vault" {
   source  = "app.terraform.io/Kochasoft-Test/network-security-group/azurerm"
-  version = "1.2.5"
+  version = "1.2.6"
 
   location            = module.resource_group_main.location
   resource_group_name = module.resource_group_main.name
