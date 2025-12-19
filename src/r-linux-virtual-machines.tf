@@ -29,8 +29,10 @@ module "linux_virtual_machine_main" {
   cloud_init_config = {
     template_file_path = "cloud-init.yml.tftpl"
     template_vars = {
-      vm_user          = "azadmin"
-      microk8s_channel = "1.29/stable"
+      admin_username    = "azadmin"
+      microk8s_channel  = "1.29/stable"
+      ansible_version   = "13.1.0"
+      azure_cli_version = "2.81.0"
     }
   }
 

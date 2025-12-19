@@ -16,42 +16,11 @@ write_files:
       ---
       - name: Install required packages
         hosts: localhost
-        remote_user: ${vm_user}
+        remote_user: ${admin_username}
         gather_facts: yes
         become: true
 
         tasks:
-					- name: Create microsoft keyring directory
-					  file:
-					    path: /etc/apt/keyrings
-					    state: directory
-					    mode: '0755'
-
-					- name: Download and add microsoft gpg key
-					  shell: |
-					    curl -sLS https://packages.microsoft.com/keys/microsoft.asc \
-					      | gpg --dearmor | tee /etc/apt/keyrings/microsoft.gpg > /dev/null
-					  args:
-					    creates: /etc/apt/keyrings/microsoft.gpg
-
-					- name: Ensure key permissions
-					  file:
-					    path: /etc/apt/keyrings/microsoft.gpg
-					    mode: '0644'
-
-					- name: Add azure cli apt repository
-					  shell: |
-					    AZ_DIST=$(lsb_release -cs)
-					    echo "Types: deb
-					    URIs: https://packages.microsoft.com/repos/azure-cli/
-					    Suites: ${AZ_DIST}
-					    Components: main
-					    Architectures: $(dpkg --print-architecture)
-					    Signed-by: /etc/apt/keyrings/microsoft.gpg" \
-					      | tee /etc/apt/sources.list.d/azure-cli.sources
-					  args:
-					    creates: /etc/apt/sources.list.d/azure-cli.sources
-
           - name: Install base packages
             apt:
               name:
@@ -82,11 +51,6 @@ write_files:
           - name: Install docker
             snap:
               name: docker
-
-          - name: Install azure cli
-					  apt:
-					    name: azure-cli
-					    state: present
 
           - name: Install ollama
             shell: curl -fsSL https://ollama.com/install.sh | sh
@@ -133,5 +97,5 @@ write_files:
 runcmd:
   - [ systemctl, enable, --now, snapd.socket ]
   - [ python3, -m, pip, install, --upgrade, pip ]
-  - [ python3, -m, pip, install, ansible ]
+  - [ python3, -m, pip, install, ansible==${ansible_version}, azure-cli==${azure_cli_version} ]
   - [ ansible-playbook, /root/install-packages.yml ]
