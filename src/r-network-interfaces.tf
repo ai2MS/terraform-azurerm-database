@@ -11,7 +11,7 @@ module "network_interface_main" {
       name                 = "${local.default_name}-IpCf-CEC-K8s"
       primary              = true
       subnet_id            = module.subnet_virtual_machines.id
-      public_ip_address_id = module.public_ip_main.id
+      public_ip_address_id = azurerm_public_ip.main.id
     }
   ]
 
