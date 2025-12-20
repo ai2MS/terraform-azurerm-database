@@ -65,6 +65,7 @@ and contains helpful information about the module's usage.
 | <a name="input_location_code"></a> [location\_code](#input\_location\_code) | Azure region code | `string` | `"cae1"` | no |
 | <a name="input_owner"></a> [owner](#input\_owner) | Resource owner | `string` | `"terraform"` | no |
 | <a name="input_project"></a> [project](#input\_project) | Project name (e.g., KSAI) | `string` | `"KSAI"` | no |
+| <a name="input_virtual_machine_admin_username"></a> [virtual\_machine\_admin\_username](#input\_virtual\_machine\_admin\_username) | Admin username of the virtual machine | `string` | `"azadmin"` | no |
 | <a name="input_virtual_machine_os_disk_storage_account_type"></a> [virtual\_machine\_os\_disk\_storage\_account\_type](#input\_virtual\_machine\_os\_disk\_storage\_account\_type) | Storage account type of the os disk of the virtual machine | `string` | `"StandardSSD_LRS"` | no |
 | <a name="input_virtual_machine_size"></a> [virtual\_machine\_size](#input\_virtual\_machine\_size) | Size of the virtual machine | `string` | `"Standard_F8s_v2"` | no |
 | <a name="input_virtual_machine_source_image_offer"></a> [virtual\_machine\_source\_image\_offer](#input\_virtual\_machine\_source\_image\_offer) | Offer of the source image of the virtual machine | `string` | `"0001-com-ubuntu-server-jammy"` | no |

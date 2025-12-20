@@ -95,11 +95,11 @@ write_files:
               creates: /snap/bin/kubectl
 
           - name: Install kubelogin
-            shell: az aks install-cli --install-location /usr/local/bin
+            shell: az aks install-cli
             args:
               creates: /usr/local/bin/kubelogin
 
-  - path: /root/show_versions.yml
+  - path: /root/show-versions.yml
     owner: root:root
     permissions: "0644"
     content: |
@@ -167,13 +167,6 @@ write_files:
           - debug:
               msg: "{{ kubectl_version.stdout | default('kubectl: not installed') }}"
 
-          - name: Ansible version
-            shell: "ansible --version | head -n1"
-            register: ansible_version
-            ignore_errors: true
-          - debug:
-              msg: "{{ ansible_version.stdout | default('Ansible: not installed') }}"
-
           - name: Python version
             shell: "python3 --version"
             register: python_version
@@ -191,6 +184,6 @@ runcmd:
   - [ python3, -m, pip, install, ansible==${ansible_version}, azure-cli==${azure_cli_version} ]
   - [ echo, "Running ansible playbook: install-packages.yml..." ]
   - [ ansible-playbook, /root/install-packages.yml, -v ]
-  - [ echo, "Running ansible playbook: show_versions.yml..." ]
-  - [ ansible-playbook, /root/show_versions.yml, -v ]
+  - [ echo, "Running ansible playbook: show-versions.yml..." ]
+  - [ ansible-playbook, /root/show-versions.yml, -v ]
   - [ echo, "Cloud-init runcmd execution finished successfully." ]
