@@ -24,9 +24,9 @@ module "key_vault_main" {
   }
 
   access_policies = [
-    {
+    for object_id in ["3465e769-6600-41c6-893f-85a12cac7cb3", "b38de99c-d5b5-4f6b-89f4-b5b2c5ad95b0"] : {
       tenant_id = data.azurerm_client_config.current.tenant_id
-      object_id = "3465e769-6600-41c6-893f-85a12cac7cb3"
+      object_id = object_id
 
       certificate_permissions = [
         "Backup", "Create", "Delete", "DeleteIssuers", "Get", "GetIssuers", "Import", "List", "ListIssuers", "ManageContacts", "ManageIssuers", "Purge", "Recover", "Restore", "SetIssuers", "Update"

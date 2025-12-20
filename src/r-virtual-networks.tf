@@ -27,4 +27,15 @@ resource "azurerm_bastion_host" "main" {
     Service = "Network"
     Purpose = "Bastion Access"
   })
+
+  lifecycle {
+    ignore_changes = [
+      tags["CreatedAt"],
+      tags["CreatedBy"],
+      tags["LastUpdatedAt"],
+      tags["LastUpdatedBy"],
+      tags["PreviouslyUpdatedAt"],
+      tags["PreviouslyUpdatedBy"]
+    ]
+  }
 }
