@@ -31,6 +31,8 @@ jobs:
       environment: "qa"
       deployment_type: ${{ inputs.deployment_type || 'apply' }}
       deployment_action: ${{ inputs.deployment_action || 'plan' }}
+      resource_group_name: "KSAI-AZR-QA-CAE1-RGrp-CEC-K8s"
+      key_vault_name: "KSAI-AZR-QA-CAE1-KV-K8s"
     secrets:
       TERRAFORM_TOKEN: ${{ secrets.TF_TOKEN_app_terraform_io }}
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_QA }}
