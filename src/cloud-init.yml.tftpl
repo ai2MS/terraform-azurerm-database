@@ -105,62 +105,97 @@ write_files:
     content: |
       ---
       - name: Show package versions
-        hosts: localhost
-        remote_user: ${admin_username}
-        gather_facts: no
-        become: false
+        owner: root:root
+        permissions: "0644"
+        content: |
+          ---
+          - name: Show package versions
+            hosts: localhost
+            remote_user: ${admin_username}
+            gather_facts: no
+            become: false
 
-        vars:
-          tools:
-            - name: Helm
-              cmd: "helm version --short || helm version"
-            - name: kubelogin
-              cmd: "kubelogin --version"
-            - name: Azure CLI
-              cmd: "az version | grep azure-cli | awk -F'\"' '{print $4}'"
-            - name: Git
-              cmd: "git --version"
-            - name: MicroK8s
-              cmd: "microk8s version --short || microk8s version"
-            - name: Ollama
-              cmd: "ollama -v"
-            - name: Docker
-              cmd: "docker --version"
-            - name: kubectl
-              cmd: "kubectl version --client --short || kubectl version --client"
-            - name: Ansible
-              cmd: "ansible --version | head -n1"
-            - name: Python
-              cmd: "python3 --version"
-
-        tasks:
-          - name: Display package versions
-            block:
-              - name: Check if "{{ item.name }}" is installed
-                command: "command -v {{ item.cmd.split()[0] }}"
-                register: tool_check
+            tasks:
+              - name: Helm version
+                shell: "helm version --short || helm version"
+                register: helm_version
                 ignore_errors: true
-                changed_when: false
-                loop: "{{ tools }}"
-                loop_control:
-                  loop_var: item
+              - debug:
+                  msg: "{{ helm_version.stdout | default('Helm: not installed') }}"
 
-              - name: Display version of "{{ item.name }}"
-                debug:
-                  msg: >
-                    {% if tool_check.results[loop.index0].rc == 0 %}
-                    {{ item.name }}: {{ lookup('pipe', item.cmd) }}
-                    {% else %}
-                    {{ item.name }}: not installed
-                    {% endif %}
-                loop: "{{ tools }}"
-                loop_control:
-                  loop_var: item
+              - name: kubelogin version
+                shell: "kubelogin --version"
+                register: kubelogin_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ kubelogin_version.stdout | default('kubelogin: not installed') }}"
+
+              - name: Azure CLI version
+                shell: "az version | grep azure-cli | awk -F'\"' '{print $4}'"
+                register: az_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ az_version.stdout | default('Azure CLI: not installed') }}"
+
+              - name: Git version
+                shell: "git --version"
+                register: git_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ git_version.stdout | default('Git: not installed') }}"
+
+              - name: MicroK8s version
+                shell: "microk8s version --short || microk8s version"
+                register: microk8s_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ microk8s_version.stdout | default('MicroK8s: not installed') }}"
+
+              - name: Ollama version
+                shell: "ollama -v"
+                register: ollama_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ ollama_version.stdout | default('Ollama: not installed') }}"
+
+              - name: Docker version
+                shell: "docker --version"
+                register: docker_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ docker_version.stdout | default('Docker: not installed') }}"
+
+              - name: kubectl version
+                shell: "kubectl version --client --short || kubectl version --client"
+                register: kubectl_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ kubectl_version.stdout | default('kubectl: not installed') }}"
+
+              - name: Ansible version
+                shell: "ansible --version | head -n1"
+                register: ansible_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ ansible_version.stdout | default('Ansible: not installed') }}"
+
+              - name: Python version
+                shell: "python3 --version"
+                register: python_version
+                ignore_errors: true
+              - debug:
+                  msg: "{{ python_version.stdout | default('Python: not installed') }}"
 
 runcmd:
+  - [ echo, "Starting cloud-init runcmd execution..." ]
   - [ systemctl, enable, --now, snapd.socket ]
+  - [ echo, "Upgrading pip..." ]
   - [ /usr/bin/python3, -m, pip, install, --upgrade, pip ]
   - [ /usr/bin/python3, -m, pip, config, set, global.disable-pip-version-check, "true" ]
+  - [ echo, "Installing ansible and azure cli..." ]
   - [ python3, -m, pip, install, ansible==${ansible_version}, azure-cli==${azure_cli_version} ]
+  - [ echo, "Running ansible playbook: install-packages.yml..." ]
   - [ ansible-playbook, /root/install-packages.yml, -v ]
+  - [ echo, "Running ansible playbook: show_versions.yml..." ]
   - [ ansible-playbook, /root/show_versions.yml, -v ]
+  - [ echo, "Cloud-init runcmd execution finished successfully." ]
