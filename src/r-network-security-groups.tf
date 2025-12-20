@@ -7,6 +7,20 @@ module "network_security_group_virtual_machines" {
 
   name = "${local.default_name}-NSGp-CEC-K8s-VIRTUAL-MACHINES"
 
+  inbound_rules = [
+    {
+      name                       = "nsgsr-allow-ssh"
+      description                = "Allow SSH connectivity"
+      priority                   = 100
+      access                     = "Allow"
+      protocol                   = "Tcp"
+      source_port_range          = "*"
+      destination_port_range     = "22"
+      source_address_prefix      = "*"
+      destination_address_prefix = "*"
+    }
+  ]
+
   tags = merge(local.default_tags, {
     Service = "Network"
     Purpose = "Virtual Security Group"
