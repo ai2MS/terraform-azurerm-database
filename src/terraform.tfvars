@@ -4,7 +4,7 @@ cloud   = "AZR"
 env     = "DEV"
 
 # Location Configuration
-location = "Canada Central"
+location = "Canada East"
 
 # Tagging Configuration
 owner = "terraform"
