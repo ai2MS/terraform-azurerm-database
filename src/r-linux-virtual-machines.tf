@@ -31,7 +31,7 @@ module "linux_virtual_machine_main" {
     template_vars = {
       admin_username    = "azadmin"
       microk8s_channel  = "1.29/stable"
-      ansible_version   = "13.1.0"
+      ansible_version   = "10.7.0"
       azure_cli_version = "2.81.0"
     }
   }

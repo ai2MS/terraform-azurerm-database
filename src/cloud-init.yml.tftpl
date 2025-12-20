@@ -94,9 +94,73 @@ write_files:
             args:
               creates: /snap/bin/kubectl
 
+          - name: Install kubelogin
+            shell: az aks install-cli --install-location /usr/local/bin
+            args:
+              creates: /usr/local/bin/kubelogin
+
+  - path: /root/show_versions.yml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      ---
+      - name: Show package versions
+        hosts: localhost
+        remote_user: ${admin_username}
+        gather_facts: no
+        become: false
+
+        vars:
+          tools:
+            - name: Helm
+              cmd: "helm version --short || helm version"
+            - name: kubelogin
+              cmd: "kubelogin --version"
+            - name: Azure CLI
+              cmd: "az version | grep azure-cli | awk -F'\"' '{print $4}'"
+            - name: Git
+              cmd: "git --version"
+            - name: MicroK8s
+              cmd: "microk8s version --short || microk8s version"
+            - name: Ollama
+              cmd: "ollama -v"
+            - name: Docker
+              cmd: "docker --version"
+            - name: kubectl
+              cmd: "kubectl version --client --short || kubectl version --client"
+            - name: Ansible
+              cmd: "ansible --version | head -n1"
+            - name: Python
+              cmd: "python3 --version"
+
+        tasks:
+          - name: Display package versions
+            block:
+              - name: Check if "{{ item.name }}" is installed
+                command: "command -v {{ item.cmd.split()[0] }}"
+                register: tool_check
+                ignore_errors: true
+                changed_when: false
+                loop: "{{ tools }}"
+                loop_control:
+                  loop_var: item
+
+              - name: Display version of "{{ item.name }}"
+                debug:
+                  msg: >
+                    {% if tool_check.results[loop.index0].rc == 0 %}
+                    {{ item.name }}: {{ lookup('pipe', item.cmd) }}
+                    {% else %}
+                    {{ item.name }}: not installed
+                    {% endif %}
+                loop: "{{ tools }}"
+                loop_control:
+                  loop_var: item
+
 runcmd:
   - [ systemctl, enable, --now, snapd.socket ]
-  - [ python3, -m, pip, install, --upgrade, pip ]
+  - [ /usr/bin/python3, -m, pip, install, --upgrade, pip ]
+  - [ /usr/bin/python3, -m, pip, config, set, global.disable-pip-version-check, "true" ]
   - [ python3, -m, pip, install, ansible==${ansible_version}, azure-cli==${azure_cli_version} ]
-  - [ az, login, --identity ]
-  - [ ansible-playbook, /root/install-packages.yml ]
+  - [ ansible-playbook, /root/install-packages.yml, -v ]
+  - [ ansible-playbook, /root/show_versions.yml, -v ]
