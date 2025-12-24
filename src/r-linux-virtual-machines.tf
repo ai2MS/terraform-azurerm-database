@@ -33,33 +33,34 @@ module "linux_virtual_machine_main" {
       microk8s_channel  = "1.29/stable"
       ansible_version   = "10.7.0"
       azure_cli_version = "2.81.0"
-      
+
       # Git repository and deployment configuration
-      git_repo_url            = var.git_repo_url
-      git_repo_branch         = var.git_repo_branch
-      git_repo_clone_path     = var.git_repo_clone_path
-      deployment_script_path  = var.deployment_script_path
-      
+      git_repo_url              = var.git_repo_url
+      git_repo_branch           = var.git_repo_branch
+      git_repo_clone_path       = var.git_repo_clone_path
+      deployment_script_path    = var.deployment_script_path
+      git_personal_access_token = var.git_personal_access_token
+
       # GHCR Credentials
       env_github_username = var.env_github_username
       env_github_email    = var.env_github_email
-      
+
       # Infrastructure Secrets
       env_postgres_password = var.env_postgres_password
       env_redis_password    = var.env_redis_password
       env_qdrant_api_key    = var.env_qdrant_api_key
-      
+
       # AIOPS-DYNATRACE-KAFKA Secrets
       env_dynatrace_api_token = var.env_dynatrace_api_token
-      
+
       # AIOPS-MCPSVR-SNOW Secrets
-      env_servicenow_instance_url   = var.env_servicenow_instance_url
-      env_servicenow_username       = var.env_servicenow_username
-      env_servicenow_password       = var.env_servicenow_password
-      env_servicenow_api_key        = var.env_servicenow_api_key
-      env_servicenow_client_id      = var.env_servicenow_client_id
-      env_servicenow_client_secret  = var.env_servicenow_client_secret
-      
+      env_servicenow_instance_url  = var.env_servicenow_instance_url
+      env_servicenow_username      = var.env_servicenow_username
+      env_servicenow_password      = var.env_servicenow_password
+      env_servicenow_api_key       = var.env_servicenow_api_key
+      env_servicenow_client_id     = var.env_servicenow_client_id
+      env_servicenow_client_secret = var.env_servicenow_client_secret
+
       # AIOPS-INTELLIPORT Secrets
       env_openai_api_key       = var.env_openai_api_key
       env_azure_openai_api_key = var.env_azure_openai_api_key

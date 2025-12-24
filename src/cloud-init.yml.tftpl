@@ -130,6 +130,95 @@ write_files:
       GITHUB_API_KEY=${env_github_api_key}
       ENCRYPTION_KEY=${env_encryption_key}
 
+  - path: /root/deploy-app.yml
+    owner: root:root
+    permissions: "0644"
+    content: |
+      ---
+      - name: Deploy application from Git repository
+        hosts: localhost
+        remote_user: ${admin_username}
+        gather_facts: yes
+        become: true
+
+        vars:
+          git_repo_url: "${git_repo_url}"
+          git_repo_branch: "${git_repo_branch}"
+          git_pat: "${git_personal_access_token}"
+          clone_path: "${git_repo_clone_path}"
+          script_path: "${deployment_script_path}"
+          env_file_source: "/root/.env"
+
+        tasks:
+          - name: Ensure parent directory exists
+            file:
+              path: "{{ clone_path | dirname }}"
+              state: directory
+              mode: "0755"
+
+          - name: Construct authenticated Git URL (if PAT provided)
+            set_fact:
+              authenticated_repo_url: "{{ git_repo_url | regex_replace('^https://', 'https://' + git_pat + '@') }}"
+            when: git_pat != ""
+            no_log: true
+
+          - name: Use original URL (if no PAT)
+            set_fact:
+              authenticated_repo_url: "{{ git_repo_url }}"
+            when: git_pat == ""
+
+          - name: Clone Git repository
+            git:
+              repo: "{{ authenticated_repo_url }}"
+              dest: "{{ clone_path }}"
+              version: "{{ git_repo_branch }}"
+              force: yes
+              accept_hostkey: yes
+              update: yes
+              depth: 1
+            register: git_clone_result
+            environment:
+              GIT_TERMINAL_PROMPT: "0"
+            no_log: true
+
+          - name: Display clone result
+            debug:
+              msg: "Repository cloned to {{ clone_path }} ({{ git_clone_result.after | default('no commit info') }})"
+
+          - name: Copy .env file to cloned repository
+            copy:
+              src: "{{ env_file_source }}"
+              dest: "{{ clone_path }}/.env"
+              owner: ${admin_username}
+              group: ${admin_username}
+              mode: "0600"
+              remote_src: yes
+
+          - name: Make deployment script executable
+            file:
+              path: "{{ clone_path }}/{{ script_path }}"
+              mode: "0755"
+            when: script_path != ""
+
+#          - name: Run deployment script
+#            shell: |
+#              cd {{ clone_path }}
+#              ./{{ script_path }}
+#            args:
+#              executable: /bin/bash
+#            when: script_path != ""
+#            register: script_result
+#
+#          - name: Display script output
+#            debug:
+#              msg: "{{ script_result.stdout_lines | default(['Script execution skipped']) }}"
+#            when: script_path != ""
+#
+#          - name: Display script errors (if any)
+#            debug:
+#              msg: "{{ script_result.stderr_lines }}"
+#            when: script_path != "" and script_result.stderr_lines is defined and script_result.stderr_lines | length > 0
+
   - path: /root/show-versions.yml
     owner: root:root
     permissions: "0644"

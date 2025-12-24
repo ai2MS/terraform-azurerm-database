@@ -120,6 +120,13 @@ variable "deployment_script_path" {
   default     = "deploy-dev.sh"
 }
 
+variable "git_personal_access_token" {
+  description = "GitHub Personal Access Token (PAT) for private repository authentication"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
 # Environment Variables for .env file
 
 # GHCR Credentials
