@@ -99,7 +99,7 @@ write_files:
             args:
               creates: /usr/local/bin/kubelogin
 
-  - path: /root/.env
+  - path: /root/microk8s-secrets.env
     owner: root:root
     permissions: "0600"
     content: |
@@ -147,7 +147,7 @@ write_files:
           git_pat: "${git_personal_access_token}"
           clone_path: "${git_repo_clone_path}"
           script_path: "${deployment_script_path}"
-          env_file_source: "/root/.env"
+          env_file_source: "/root/microk8s-secrets.env"
 
         tasks:
           - name: Ensure parent directory exists
@@ -188,7 +188,7 @@ write_files:
           - name: Copy .env file to cloned repository
             copy:
               src: "{{ env_file_source }}"
-              dest: "{{ clone_path }}/.env"
+              dest: "{{ clone_path }}/microk8s-secrets.env"
               owner: ${admin_username}
               group: ${admin_username}
               mode: "0600"
